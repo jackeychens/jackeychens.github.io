@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="java,aop," />
 
 
 
@@ -79,14 +79,18 @@
 
 
 
-<meta name="keywords" content="Android">
-<meta property="og:type" content="website">
-<meta property="og:title" content="个人博客">
-<meta property="og:url" content="http://yoursite.com/archives/2018/09/index.html">
+<meta name="description" content="Aop 知识点  1 jdk 动态代理 2 CGLIB 动态代理  区别： 1 jdk 所有目标类需实现一个接口 2 jdk 需要实现动态代理类，实现InvocationHandler接口 并实现invoke方法 3 cglib 不需要实现接口 4 cglib 代理类需实现MethodInterceptor,并实现其intercpter方法 5 cglib 实现增强的目标类工厂Factory,使">
+<meta name="keywords" content="java,aop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java之Aop">
+<meta property="og:url" content="http://yoursite.com/2018/09/23/java-aop/index.html">
 <meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="Aop 知识点  1 jdk 动态代理 2 CGLIB 动态代理  区别： 1 jdk 所有目标类需实现一个接口 2 jdk 需要实现动态代理类，实现InvocationHandler接口 并实现invoke方法 3 cglib 不需要实现接口 4 cglib 代理类需实现MethodInterceptor,并实现其intercpter方法 5 cglib 实现增强的目标类工厂Factory,使">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-23T13:06:22.291Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="个人博客">
+<meta name="twitter:title" content="java之Aop">
+<meta name="twitter:description" content="Aop 知识点  1 jdk 动态代理 2 CGLIB 动态代理  区别： 1 jdk 所有目标类需实现一个接口 2 jdk 需要实现动态代理类，实现InvocationHandler接口 并实现invoke方法 3 cglib 不需要实现接口 4 cglib 代理类需实现MethodInterceptor,并实现其intercpter方法 5 cglib 实现增强的目标类工厂Factory,使">
 
 
 
@@ -116,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/09/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/23/java-aop/"/>
 
 
 
 
 
-  <title>归档 | 个人博客</title>
+  <title>java之Aop | 个人博客</title>
   
 
 
@@ -141,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -255,222 +259,177 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/23/java-aop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jackey Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">java之Aop</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-23T20:59:49+08:00">
+                2018-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 5 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/23/java-wsdl/" itemprop="url">
-              
-                <span itemprop="name">java_wsdl</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-23T21:04:54+08:00"
-              content="2018-09-23" >
-          09-23
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/23/java-serialize/" itemprop="url">
-              
-                <span itemprop="name">java之序列化（serializable，Externalizable）</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-23T21:03:12+08:00"
-              content="2018-09-23" >
-          09-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/23/java-aop/" itemprop="url">
-              
-                <span itemprop="name">java之Aop</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-23T20:59:49+08:00"
-              content="2018-09-23" >
-          09-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p> Aop 知识点</p>
+<p> 1 jdk 动态代理<br> 2 CGLIB 动态代理</p>
+<p> 区别：<br> 1 jdk 所有目标类需实现一个接口<br> 2 jdk 需要实现动态代理类，实现InvocationHandler接口 并实现invoke方法<br> 3 cglib 不需要实现接口<br> 4 cglib 代理类需实现MethodInterceptor,并实现其intercpter方法<br> 5 cglib 实现增强的目标类工厂Factory,使用Enhancer类的方法获取增强后的目标类<br> 6 cglib 关联cglib.jar和asm.jar(asm生成目标类执行效率较高)</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/23/linux-cmd/" itemprop="url">
-              
-                <span itemprop="name">linux 系统句柄数调整</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-23T20:51:02+08:00"
-              content="2018-09-23" >
-          09-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/09/23/lunchMode/" itemprop="url">
-              
-                <span itemprop="name">Android lunchMode</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-23T13:12:32+08:00"
-              content="2018-09-23" >
-          09-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/aop/" rel="tag"># aop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/23/linux-cmd/" rel="next" title="linux 系统句柄数调整">
+                <i class="fa fa-chevron-left"></i> linux 系统句柄数调整
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/23/java-serialize/" rel="prev" title="java之序列化（serializable，Externalizable）">
+                java之序列化（serializable，Externalizable） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -478,6 +437,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -709,6 +672,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
