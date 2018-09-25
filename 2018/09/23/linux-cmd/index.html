@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1. ulimit -a 查看当前用户的文件句柄限制2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常">
+<meta name="description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a  `2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限">
 <meta name="keywords" content="java,linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux 系统句柄数调整">
+<meta property="og:title" content="linux 服务器命令">
 <meta property="og:url" content="http://yoursite.com/2018/09/23/linux-cmd/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="1. ulimit -a 查看当前用户的文件句柄限制2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常">
+<meta property="og:description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a  `2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-23T13:06:36.734Z">
+<meta property="og:updated_time" content="2018-09-24T01:54:07.082Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux 系统句柄数调整">
-<meta name="twitter:description" content="1. ulimit -a 查看当前用户的文件句柄限制2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常">
+<meta name="twitter:title" content="linux 服务器命令">
+<meta name="twitter:description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a  `2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>linux 系统句柄数调整 | 个人博客</title>
+  <title>linux 服务器命令 | 个人博客</title>
   
 
 
@@ -290,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linux 系统句柄数调整</h1>
+          <h1 class="post-title" itemprop="name headline">linux 服务器命令</h1>
         
 
         <div class="post-meta">
@@ -362,8 +362,27 @@
       
 
       
-        <h4 id="1-ulimit-a-查看当前用户的文件句柄限制"><a href="#1-ulimit-a-查看当前用户的文件句柄限制" class="headerlink" title="1. ulimit -a 查看当前用户的文件句柄限制"></a>1. ulimit -a 查看当前用户的文件句柄限制</h4><h4 id="2-用户级别的句柄数限制修改。"><a href="#2-用户级别的句柄数限制修改。" class="headerlink" title="2. 用户级别的句柄数限制修改。"></a>2. 用户级别的句柄数限制修改。</h4><p>修改 /etc/security/limits.conf 增加下面的代码：<br>用户名(或者用*表示所有用户)  soft nofile 65535<br>用户名 hard nofile 65535<br>有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常了。<br>修改之后可能需要重启shell生效。</p>
-<h4 id="3-系统级别的句柄数限制修改。"><a href="#3-系统级别的句柄数限制修改。" class="headerlink" title="3. 系统级别的句柄数限制修改。"></a>3. 系统级别的句柄数限制修改。</h4><p>sysctl -w fs.file-max 65536<br>或者<br>echo “65536” &gt; /proc/sys/fs/file-max<br>两者作用是相同的，前者改内核参数，后者直接作用于内核参数在虚拟文件系统（procfs, psuedo file system）上对应的文件而已。<br>可以用下面的命令查看新的限制<br>sysctl -a | grep fs.file-max<br>或者<br>cat /proc/sys/fs/file-max<br>修改内核参数<br>/etc/sysctl.conf<br>echo “fs.file-max=65536” &gt;&gt; /etc/sysctl.conf<br>sysctl -p<br>查看系统总限制 命令：cat /proc/sys/fs/file-max<br>查看整个系统目前使用的文件句柄数量命令：cat /proc/sys/fs/file-nr<br>查看某个进程开了哪些句柄 ：lsof -p pid<br>某个进程开了几个句柄 ：lsof -p pid |wc -l<br>也可以看到某个目录 /文件被什么进程占用了,显示已打开该目录或文件的所有进程信息 ：lsof path/filename</p>
+        <h2 id="服务器句柄数相关命令"><a href="#服务器句柄数相关命令" class="headerlink" title="服务器句柄数相关命令"></a>服务器句柄数相关命令</h2><h4 id="1-查看当前用户的文件句柄限制"><a href="#1-查看当前用户的文件句柄限制" class="headerlink" title="1. 查看当前用户的文件句柄限制"></a>1. 查看当前用户的文件句柄限制</h4><p>`<br>ulimit -a </p>
+<h2 id=""><a href="#" class="headerlink" title="`"></a>`</h2><h4 id="2-用户级别的句柄数限制修改。"><a href="#2-用户级别的句柄数限制修改。" class="headerlink" title="2. 用户级别的句柄数限制修改。"></a>2. 用户级别的句柄数限制修改。</h4><p>修改 /etc/security/limits.conf 增加下面的代码：<br>用户名(或者用*表示所有用户)  soft nofile 65535<br>用户名 hard nofile 65535<br>有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常了。</p>
+<h2 id="修改之后可能需要重启shell生效。"><a href="#修改之后可能需要重启shell生效。" class="headerlink" title="修改之后可能需要重启shell生效。"></a>修改之后可能需要重启shell生效。</h2><h4 id="3-系统级别的句柄数限制修改。"><a href="#3-系统级别的句柄数限制修改。" class="headerlink" title="3. 系统级别的句柄数限制修改。"></a>3. 系统级别的句柄数限制修改。</h4><p><code>sysctl -w fs.file-max 65536</code><br>或<br><code>echo &quot;65536&quot; &gt; /proc/sys/fs/file-max</code><br>两者作用是相同的，前者改内核参数，后者直接作用于内核参数在虚拟文件系统（procfs, psuedo file system）上对应的文件而已。<br>可以用下面的命令查看新的限制<br><code>sysctl -a | grep fs.file-max</code><br>或者<br><code>cat /proc/sys/fs/file-max</code><br>修改内核参数<br>(<code>)
+/etc/sysctl.conf
+echo &quot;fs.file-max=65536&quot; &gt;&gt; /etc/sysctl.conf
+sysctl -p
+(</code>)</p>
+<ul>
+<li>查看系统总限制，命令：<br><code>cat /proc/sys/fs/file-max</code></li>
+<li>查看整个系统目前使用的文件句柄数量，命令：<br><code>cat /proc/sys/fs/file-nr</code></li>
+<li>查看某个进程开了哪些句柄<br><code>lsof -p pid</code></li>
+<li>某个进程开了几个句柄<br><code>lsof -p pid |wc -l</code></li>
+<li>也可以看到某个目录 /文件被什么进程占用了,显示已打开该目录或文件的所有进程信息<br><code>lsof path/filename</code></li>
+</ul>
+<hr>
+<h4 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h4><ul>
+<li>查找进程<br><code>for i in &#39;pgrep java&#39;;do echo $i; ll /proc/$i/cwd; netstat -ntlp|grep $i;done</code></li>
+<li>tomcat并发数<br><code>ps -ef|grep httpd|wc -l</code></li>
+<li>外部访问量的ip地址<br><code>grep ip:port | awk&#39;{print $5}&#39;| awk -F:&#39;{print ($1&gt;$4?$1:$4)}&#39;|sort|uniq -c |sort -nr|head</code></li>
+<li>开放hosts文件的读写权限<br><code>sudo /bin/chmod +a &#39;user:apple:allow write&#39; /etc/hosts</code></li>
+</ul>
 
       
     </div>
@@ -396,8 +415,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/23/lunchMode/" rel="next" title="Android lunchMode">
-                <i class="fa fa-chevron-left"></i> Android lunchMode
+              <a href="/2018/09/23/lunchMode/" rel="next" title="Android之Activity四种加载模式">
+                <i class="fa fa-chevron-left"></i> Android之Activity四种加载模式
               </a>
             
           </div>
@@ -485,7 +504,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -496,7 +515,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -507,7 +526,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -550,7 +569,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-ulimit-a-查看当前用户的文件句柄限制"><span class="nav-number">1.</span> <span class="nav-text">1. ulimit -a 查看当前用户的文件句柄限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-用户级别的句柄数限制修改。"><span class="nav-number">2.</span> <span class="nav-text">2. 用户级别的句柄数限制修改。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-系统级别的句柄数限制修改。"><span class="nav-number">3.</span> <span class="nav-text">3. 系统级别的句柄数限制修改。</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器句柄数相关命令"><span class="nav-number">1.</span> <span class="nav-text">服务器句柄数相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-查看当前用户的文件句柄限制"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 查看当前用户的文件句柄限制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">2.</span> <span class="nav-text">`</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-用户级别的句柄数限制修改。"><span class="nav-number">2.0.1.</span> <span class="nav-text">2. 用户级别的句柄数限制修改。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改之后可能需要重启shell生效。"><span class="nav-number">3.</span> <span class="nav-text">修改之后可能需要重启shell生效。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-系统级别的句柄数限制修改。"><span class="nav-number">3.0.1.</span> <span class="nav-text">3. 系统级别的句柄数限制修改。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他命令"><span class="nav-number">3.0.2.</span> <span class="nav-text">其他命令</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

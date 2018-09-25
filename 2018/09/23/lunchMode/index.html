@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行说明 Android Activity 一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。standerdsingleTopsingleTasksingleInstance">
+<meta name="description" content="本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行讲解和说明 activity一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。下面就对这四种加载模式进行说明 standerd系统默认的启动标准模式。作用：每新打开一个activity，都会生成一个新的activity实例，并放于栈顶；">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android lunchMode">
+<meta property="og:title" content="Android之Activity四种加载模式">
 <meta property="og:url" content="http://yoursite.com/2018/09/23/lunchMode/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行说明 Android Activity 一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。standerdsingleTopsingleTasksingleInstance">
+<meta property="og:description" content="本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行讲解和说明 activity一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。下面就对这四种加载模式进行说明 standerd系统默认的启动标准模式。作用：每新打开一个activity，都会生成一个新的activity实例，并放于栈顶；">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-23T05:22:09.634Z">
+<meta property="og:image" content="http://yoursite.com/Users/apple/Pictures/博客截图/diagram_backstack.png">
+<meta property="og:updated_time" content="2018-09-25T09:33:34.705Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android lunchMode">
-<meta name="twitter:description" content="本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行说明 Android Activity 一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。standerdsingleTopsingleTasksingleInstance">
+<meta name="twitter:title" content="Android之Activity四种加载模式">
+<meta name="twitter:description" content="本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行讲解和说明 activity一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。下面就对这四种加载模式进行说明 standerd系统默认的启动标准模式。作用：每新打开一个activity，都会生成一个新的activity实例，并放于栈顶；">
+<meta name="twitter:image" content="http://yoursite.com/Users/apple/Pictures/博客截图/diagram_backstack.png">
 
 
 
@@ -126,7 +128,7 @@
 
 
 
-  <title>Android lunchMode | 个人博客</title>
+  <title>Android之Activity四种加载模式 | 个人博客</title>
   
 
 
@@ -290,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Android lunchMode</h1>
+          <h1 class="post-title" itemprop="name headline">Android之Activity四种加载模式</h1>
         
 
         <div class="post-meta">
@@ -362,8 +364,22 @@
       
 
       
-        <p>本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行说明</p>
-<h1 id="Android-Activity-一共有四种加载模式：standerd-singleTop-singleTask-singleInstance。"><a href="#Android-Activity-一共有四种加载模式：standerd-singleTop-singleTask-singleInstance。" class="headerlink" title="Android Activity 一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。"></a>Android Activity 一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。</h1><h3 id="standerd"><a href="#standerd" class="headerlink" title="standerd"></a>standerd</h3><h3 id="singleTop"><a href="#singleTop" class="headerlink" title="singleTop"></a>singleTop</h3><h3 id="singleTask"><a href="#singleTask" class="headerlink" title="singleTask"></a>singleTask</h3><h3 id="singleInstance"><a href="#singleInstance" class="headerlink" title="singleInstance"></a>singleInstance</h3>
+        <p>本章主要对Android的Activity 四种加载模式lunchMode与Inteng Flag进行讲解和说明</p>
+<p>activity一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。下面就对这四种加载模式进行说明</p>
+<h5 id="standerd"><a href="#standerd" class="headerlink" title="standerd"></a>standerd</h5><p>系统默认的启动标准模式。<br>作用：每新打开一个activity，都会生成一个新的activity实例，并放于栈顶；<br><img src="/Users/apple/Pictures/博客截图/diagram_backstack.png" alt="diagram_backstack"></p>
+<h5 id="singleTop"><a href="#singleTop" class="headerlink" title="singleTop"></a>singleTop</h5><ul>
+<li>如果当前任务的顶部已存在 Activity 的一个实例，则系统会通过调用该实例的 onNewIntent() 方法向其传送 Intent，而不是创建 Activity 的新实例.</li>
+<li>Activity 可以多次实例化，而每个实例均可属于不同的任务，并且一个任务可以拥有多个实例.</li>
+</ul>
+<h5 id="singleTask"><a href="#singleTask" class="headerlink" title="singleTask"></a>singleTask</h5><ul>
+<li>系统创建新任务并实例化位于新任务底部的 Activity. 但是，如果该 Activity 的一个实例已存在于一个单独的任务中，则系统会通过调用现有实例的 onNewIntent() 方法向其传送 Intent，而不是创建新实例.</li>
+<li>一次只能存在 Activity 的一个实例.</li>
+</ul>
+<h5 id="singleInstance"><a href="#singleInstance" class="headerlink" title="singleInstance"></a>singleInstance</h5><ul>
+<li>与 “singleTask” 相同，只是系统不会将任何其他 Activity 启动到包含实例的任务中.</li>
+<li>该 Activity 始终是其任务唯一仅有的成员；由此 Activity 启动的任何 Activity 均在单独的任务中打开.</li>
+</ul>
+
       
     </div>
     
@@ -399,8 +415,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/23/linux-cmd/" rel="prev" title="linux 系统句柄数调整">
-                linux 系统句柄数调整 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/23/linux-cmd/" rel="prev" title="linux 服务器命令">
+                linux 服务器命令 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -478,7 +494,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -489,7 +505,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -500,7 +516,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -543,7 +559,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Activity-一共有四种加载模式：standerd-singleTop-singleTask-singleInstance。"><span class="nav-number">1.</span> <span class="nav-text">Android Activity 一共有四种加载模式：standerd,singleTop,singleTask,singleInstance。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#standerd"><span class="nav-number">1.0.1.</span> <span class="nav-text">standerd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#singleTop"><span class="nav-number">1.0.2.</span> <span class="nav-text">singleTop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#singleTask"><span class="nav-number">1.0.3.</span> <span class="nav-text">singleTask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#singleInstance"><span class="nav-number">1.0.4.</span> <span class="nav-text">singleInstance</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#standerd"><span class="nav-number">1.</span> <span class="nav-text">standerd</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#singleTop"><span class="nav-number">2.</span> <span class="nav-text">singleTop</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#singleTask"><span class="nav-number">3.</span> <span class="nav-text">singleTask</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#singleInstance"><span class="nav-number">4.</span> <span class="nav-text">singleInstance</span></a></li></ol></div>
             
 
           </div>

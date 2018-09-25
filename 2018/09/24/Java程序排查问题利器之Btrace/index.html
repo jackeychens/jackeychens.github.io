@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java,btrace," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Java程序排查问题利器之Btrace （一）Btrace的介绍BTrace是Java的安全可靠的动态跟踪工具。 他的工作原理是通过 instrument + asm 来对正在运行的java程序中的class类进行动态增强，可以在不用重启的情况下监控系统运行情况，方便的获取程序运行时的数据信息，如方法参数、返回值、全局变量和堆栈信息等，并且做到最少的侵入，占用最少的系统资源。 正如上面描述的一些特">
+<meta name="keywords" content="java,btrace">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java程序排查问题利器之Btrace">
+<meta property="og:url" content="http://yoursite.com/2018/09/24/Java程序排查问题利器之Btrace/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="Java程序排查问题利器之Btrace （一）Btrace的介绍BTrace是Java的安全可靠的动态跟踪工具。 他的工作原理是通过 instrument + asm 来对正在运行的java程序中的class类进行动态增强，可以在不用重启的情况下监控系统运行情况，方便的获取程序运行时的数据信息，如方法参数、返回值、全局变量和堆栈信息等，并且做到最少的侵入，占用最少的系统资源。 正如上面描述的一些特">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-24T02:33:53.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java程序排查问题利器之Btrace">
+<meta name="twitter:description" content="Java程序排查问题利器之Btrace （一）Btrace的介绍BTrace是Java的安全可靠的动态跟踪工具。 他的工作原理是通过 instrument + asm 来对正在运行的java程序中的class类进行动态增强，可以在不用重启的情况下监控系统运行情况，方便的获取程序运行时的数据信息，如方法参数、返回值、全局变量和堆栈信息等，并且做到最少的侵入，占用最少的系统资源。 正如上面描述的一些特">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/24/Java程序排查问题利器之Btrace/"/>
+
+
+
+
+
+  <title>Java程序排查问题利器之Btrace | 个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/24/Java程序排查问题利器之Btrace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jackey Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java程序排查问题利器之Btrace</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-24T09:54:36+08:00">
+                2018-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java程序排查问题利器之Btrace</p>
+<h4 id="（一）Btrace的介绍"><a href="#（一）Btrace的介绍" class="headerlink" title="（一）Btrace的介绍"></a>（一）Btrace的介绍</h4><p>BTrace是Java的安全可靠的动态跟踪工具。 他的工作原理是通过 instrument + asm 来对正在运行的java程序中的class类进行动态增强，可以在不用重启的情况下监控系统运行情况，方便的获取程序运行时的数据信息，如方法参数、返回值、全局变量和堆栈信息等，并且做到最少的侵入，占用最少的系统资源。</p>
+<p>正如上面描述的一些特性，所以btrace一般是用来排查生产环境jvm问题的一款利器，使用它不用再担心应用程序的日志打的不够全，不够细，也不用为了排查问题一遍遍的重启程序。</p>
+<h4 id="（二）Btrace的一些限制"><a href="#（二）Btrace的一些限制" class="headerlink" title="（二）Btrace的一些限制"></a>（二）Btrace的一些限制</h4><pre><code>由于Btrace会把脚本逻辑直接侵入到运行的代码中，所以在使用上做很多限制：
+
+    1、不能创建对象
+
+    2、不能使用数组
+
+    3、不能抛出或捕获异常
+
+    4、不能使用循环
+
+    5、不能使用synchronized关键字
+
+    6、属性和方法必须使用static修饰
+</code></pre><p>此外不恰当的使用BTrace可能导致生产程序直接挂掉，所以在上生产环境之前，务必在开发环境充分验证脚本的正确性。</p>
+<h4 id="（三）Btrace能干什么"><a href="#（三）Btrace能干什么" class="headerlink" title="（三）Btrace能干什么"></a>（三）Btrace能干什么</h4><pre><code>（1）分析任意接口或者方法的耗时情况
+
+（2）分析不断的添加数据时，Map的扩容情况
+
+（3）分析那个方法里面调用了System.gc()方法，并打印出其调用栈
+
+（4）某些方法抛出异常时，分析其运行参数
+
+（5）统计一些接口的调用次数
+
+（6）分析一些方法的代码是否执行到了某一行
+
+（7）..........
+</code></pre><p>注意上面的所有操作，都是监控正在运行中的程序，基本不会产生任何影响。</p>
+<h4 id="（四）Btrace的安装"><a href="#（四）Btrace的安装" class="headerlink" title="（四）Btrace的安装"></a>（四）Btrace的安装</h4><p>（1）从github上下载最新的二进制包 ，版本是1.3.10.2</p>
+<pre><code>wget https://github.com/btraceio/btrace/releases/download/v1.3.10.2/btrace-bin-1.3.10.2.tgz
+</code></pre><p>（2）解压到指定路径</p>
+<p>（3）设置环境变量</p>
+<pre><code>BTRACE_HOME=/root/btrace
+export BTRACE_HOME
+export PATH=$PATH:$BTRACE_HOME/bin
+</code></pre><p>（4）验证安装是否成功</p>
+<pre><code> [root@es1 ~]# btrace --version
+BTrace v.1.3.10 (20171121)
+</code></pre><p>（5）查看btrace的帮助文档</p>
+<pre><code>[root@es1 build]# btrace
+Usage: btrace &lt;options&gt; &lt;pid&gt; &lt;btrace source or .class file&gt; &lt;btrace arguments&gt;
+where possible options include:
+ --version             Show the version
+  -v                    Run in verbose mode
+  -o &lt;file&gt;             The path to store the probe output (will disable showing the output in console)
+-u                    Run in trusted mode
+  -d &lt;path&gt;             Dump the instrumented classes to the specified path
+  -pd &lt;path&gt;            The search path for the probe XML descriptors
+  -classpath &lt;path&gt;     Specify where to find user class files and annotation processors
+  -cp &lt;path&gt;            Specify where to find user class files and annotation processors
+  -I &lt;path&gt;             Specify where to find include files
+  -p &lt;port&gt;             Specify port to which the btrace agent listens for clients
+  -statsd &lt;host[:port]&gt; Specify the statsd server, if any
+</code></pre><p>（五）Btrace使用的一个例子</p>
+<p>注意btrace在maven上发布的jar，版本非常低，都是几年前的版本了，如果要编写btrace脚本，建议把安装目录下三个核心jar直接拷贝到工程中临时使用即可，如果想要随时使用，也可以将其上传到你们公司的maven私服上。</p>
+<pre><code>[root@es1 btrace]# ll build/
+总用量 1572
+-rw-r--r--. 1 root root 460271 12月 16 00:44 btrace-agent.jar
+-rw-r--r--. 1 root root 358679 12月 16 00:44 btrace-boot.jar
+-rw-r--r--. 1 root root 785219 12月 16 00:44 btrace-client.jar
+</code></pre><p>（1）在使用btrace之前，我们先需要写一个简单的java程序，模拟成是线上正在跑的程序</p>
+<p>代码比较简单，就是每隔随机的时间，随机生成两个整数，进行求和：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.test;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BtraceTest</span>  </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Random random=<span class="keyword">new</span> Random();</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">add</span> <span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span>   </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sum=a+b;</span><br><span class="line">        System.out.println(<span class="string">"和："</span>+sum);</span><br><span class="line">        <span class="keyword">return</span> a+b;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                add(random.nextInt(<span class="number">10</span>), random.nextInt(<span class="number">10</span>));</span><br><span class="line">                Thread.sleep(random.nextInt(<span class="number">10</span>) * <span class="number">100</span>);</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span>     </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> BtraceTest().run();</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>（2）主程序已经有了，下面就需要我们写btrace脚本，来监控”我们的线上程序了” 注意，需要在工程里面引入上面提到的3个jar。</p>
+<p>监控的代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> samples;</span><br><span class="line"><span class="keyword">import</span> com.sun.btrace.BTraceUtils;</span><br><span class="line"><span class="keyword">import</span> com.sun.btrace.annotations.*;</span><br><span class="line"><span class="keyword">import</span> com.sun.btrace.annotations.Export;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> com.sun.btrace.BTraceUtils.*;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@BTrace</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OnlineDebug</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@OnExit</span><span class="comment">//当成程序退出时，执行一些命令</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onexit</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</span><br><span class="line">        println(<span class="string">"BTrace program exits! with code: "</span> + code);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Export</span> <span class="comment">//可以用来统计调用次数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> counter;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@OnMethod</span>(clazz=<span class="string">"com.test.BtraceTest"</span>, method=<span class="string">"add"</span>,</span><br><span class="line">            location=<span class="meta">@Location</span>(value=Kind.RETURN))</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">m</span><span class="params">(@Self Object self, <span class="keyword">int</span> a,<span class="keyword">int</span> b,@Return <span class="keyword">int</span> result,@Duration <span class="keyword">long</span> time)</span> </span>&#123;</span><br><span class="line">        BTraceUtils.println(<span class="string">"参数： a: "</span>+a+<span class="string">"  b: "</span>+b);</span><br><span class="line">        BTraceUtils.println(<span class="string">"花费时间：  "</span>+time*<span class="number">1.0</span>/<span class="number">1000</span>+<span class="string">"ms"</span>);</span><br><span class="line">        jstack();<span class="comment">//打印堆栈信息</span></span><br><span class="line">        counter++;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@OnEvent</span>(<span class="string">"1"</span>)<span class="comment">//通过事件触发，打印当前的程序调用次数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setL1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        BTraceUtils.println(<span class="string">"executor count：  "</span>+counter);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//监控程序是否走到第22行代码</span></span><br><span class="line">    <span class="meta">@OnMethod</span>(clazz = <span class="string">"com.test.BtraceTest"</span>, location = <span class="meta">@Location</span>(value = Kind.LINE, line = <span class="number">22</span>))</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">onBind</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        println(<span class="string">"执行到第22行"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//每隔指定时间打印一下调用次数</span></span><br><span class="line">     <span class="meta">@OnTimer</span>(<span class="number">5000</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        BTraceUtils.println(<span class="string">"executor count：  "</span>+counter);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//    //慎用 监控程序里面是否调用了，java.lang下面的一些类或方法</span></span><br><span class="line"><span class="comment">//    @OnMethod(clazz="/java\\.lang\\..*/", method="/.*/")</span></span><br><span class="line"><span class="comment">//    public static void swingMethods( @ProbeClassName String probeClass, @ProbeMethodName String probeMethod) &#123;</span></span><br><span class="line"><span class="comment">//        print("entered " + probeClass + "."  + probeMethod);</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>（六）模拟测试</p>
+<p>经过步骤五，我们已经准备好了模拟程序和监控脚本，下面来部署测试下：</p>
+<p>（1）首先，通过maven将模拟程序打包成一个jar</p>
+<p>（2）选择一台linux机器将jar包上传</p>
+<p>（3）执行命令，启动模拟程序</p>
+<p>java -cp  xxx.jar com.test.BtraceTest<br>linux终端输出内容如下：</p>
+<p>和：8<br>和：11<br>和：3<br>和：12<br>和：14<br>和：15<br>和：8<br>和：2<br>和：8<br>和：7<br>和：18<br>和：4<br>（4）打开另一个linux终端部署监控脚本OnlineDebug.java到指定目录</p>
+<p>赋予执行权限:<br><code>chmod +x OnlineDebug.java</code><br>执行jps命令，查看模拟程序的进程id</p>
+<p>启动监控脚本：<br><code>btrace 2139 OnlineDebug.java</code><br>等待几秒后，控制台输出如下：</p>
+<p>参数： a: 0  b: 8<br>花费时间：  101.973ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>参数： a: 3  b: 4<br>花费时间：  116.611ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>参数： a: 0  b: 2<br>花费时间：  113.168ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>参数： a: 7  b: 7<br>花费时间：  113.434ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>参数： a: 6  b: 1<br>花费时间：  181.184ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>参数： a: 7  b: 6<br>花费时间：  190.881ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>executor count：  44<br>可以看到监控脚本已经生效，成功获取到了模拟程序的内部参数，以及执行时间等。此刻另一个终端的模拟程序还在 正常运行，但内部其实已经被增强了。</p>
+<p>如何退出监控脚本？</p>
+<pre><code>非常简单，执行ctrl+c命令，选择1退出即可：
+</code></pre><p>参数： a: 9  b: 9<br>花费时间：  246.743ms<br>com.test.BtraceTest.add(BtraceTest.java:11)<br>com.test.BtraceTest.run(BtraceTest.java:17)<br>com.test.BtraceTest.main(BtraceTest.java:28)<br>参数： a: 3  b: 1<br>花费时间：  251.039ms<br>^CPlease enter your option:</p>
+<pre><code>1. exit
+2. send an event
+3. send a named event
+4. flush console output
+</code></pre><p>1<br>总结：<br>    通过上面的例子，相信大家可以感受到btrace的强大，用其来排查正在运行的程序问题非常方便，感兴趣的朋友们可以自己试一试。</p>
+<p>参考链接：<br>    <a href="https://github.com/btraceio/btrace/wiki/BTrace-Annotations" target="_blank" rel="noopener">https://github.com/btraceio/btrace/wiki/BTrace-Annotations</a><br>    <a href="https://yq.aliyun.com/articles/7569" target="_blank" rel="noopener">https://yq.aliyun.com/articles/7569</a><br>    <a href="https://www.jianshu.com/p/93e94b724476" target="_blank" rel="noopener">https://www.jianshu.com/p/93e94b724476</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/btrace/" rel="tag"># btrace</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/24/tomcat-optimizing/" rel="next" title="tomcat 配置参数详解以及调优">
+                <i class="fa fa-chevron-left"></i> tomcat 配置参数详解以及调优
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/24/Android优化之UI篇/" rel="prev" title="Android基础UI篇">
+                Android基础UI篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">jackey Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/jackeychens" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#（一）Btrace的介绍"><span class="nav-number">1.</span> <span class="nav-text">（一）Btrace的介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（二）Btrace的一些限制"><span class="nav-number">2.</span> <span class="nav-text">（二）Btrace的一些限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（三）Btrace能干什么"><span class="nav-number">3.</span> <span class="nav-text">（三）Btrace能干什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（四）Btrace的安装"><span class="nav-number">4.</span> <span class="nav-text">（四）Btrace的安装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jackey Chen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
