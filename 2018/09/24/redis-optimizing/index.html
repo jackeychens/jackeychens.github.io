@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Redis 相关配置说明maxmemory-policy: volatile-lru -&amp;gt; remove the key with an expire set using an LRU algorithm内存不足时，在设置过期时间的键空间内，移除最近最少使用的key allkeys-lru -&amp;gt; remove any key according to the LRU algorithm">
+<meta name="description" content="Redis 相关配置说明maxmemory-policy: volatile-lru -&amp;gt; remove the key with an expire set using an LRU algorithm 内存不足时，在设置过期时间的键空间内，移除最近最少使用的key allkeys-lru -&amp;gt; remove any key according to the LRU algorith">
 <meta name="keywords" content="redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis配置详解以及参数调优">
 <meta property="og:url" content="http://yoursite.com/2018/09/24/redis-optimizing/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="Redis 相关配置说明maxmemory-policy: volatile-lru -&amp;gt; remove the key with an expire set using an LRU algorithm内存不足时，在设置过期时间的键空间内，移除最近最少使用的key allkeys-lru -&amp;gt; remove any key according to the LRU algorithm">
+<meta property="og:description" content="Redis 相关配置说明maxmemory-policy: volatile-lru -&amp;gt; remove the key with an expire set using an LRU algorithm 内存不足时，在设置过期时间的键空间内，移除最近最少使用的key allkeys-lru -&amp;gt; remove any key according to the LRU algorith">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-24T01:26:49.254Z">
+<meta property="og:updated_time" content="2018-10-23T08:39:54.858Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis配置详解以及参数调优">
-<meta name="twitter:description" content="Redis 相关配置说明maxmemory-policy: volatile-lru -&amp;gt; remove the key with an expire set using an LRU algorithm内存不足时，在设置过期时间的键空间内，移除最近最少使用的key allkeys-lru -&amp;gt; remove any key according to the LRU algorithm">
+<meta name="twitter:description" content="Redis 相关配置说明maxmemory-policy: volatile-lru -&amp;gt; remove the key with an expire set using an LRU algorithm 内存不足时，在设置过期时间的键空间内，移除最近最少使用的key allkeys-lru -&amp;gt; remove any key according to the LRU algorith">
 
 
 
@@ -363,12 +363,18 @@
 
       
         <p>Redis 相关配置说明<br>maxmemory-policy:</p>
-<h1 id="volatile-lru-gt-remove-the-key-with-an-expire-set-using-an-LRU-algorithm"><a href="#volatile-lru-gt-remove-the-key-with-an-expire-set-using-an-LRU-algorithm" class="headerlink" title="volatile-lru -&gt; remove the key with an expire set using an LRU algorithm"></a>volatile-lru -&gt; remove the key with an expire set using an LRU algorithm</h1><p>内存不足时，在设置过期时间的键空间内，移除最近最少使用的key</p>
-<h1 id="allkeys-lru-gt-remove-any-key-according-to-the-LRU-algorithm"><a href="#allkeys-lru-gt-remove-any-key-according-to-the-LRU-algorithm" class="headerlink" title="allkeys-lru -&gt; remove any key according to the LRU algorithm"></a>allkeys-lru -&gt; remove any key according to the LRU algorithm</h1><p>当内存不足时，移除最近最少使用的key</p>
-<h1 id="volatile-random-gt-remove-a-random-key-with-an-expire-set"><a href="#volatile-random-gt-remove-a-random-key-with-an-expire-set" class="headerlink" title="volatile-random -&gt; remove a random key with an expire set"></a>volatile-random -&gt; remove a random key with an expire set</h1><p>内存不足时，在设置过期时间的键控件，随机移除</p>
-<h1 id="allkeys-random-gt-remove-a-random-key-any-key"><a href="#allkeys-random-gt-remove-a-random-key-any-key" class="headerlink" title="allkeys-random -&gt; remove a random key, any key"></a>allkeys-random -&gt; remove a random key, any key</h1><p>内存不足是，随机移除</p>
-<h1 id="volatile-ttl-gt-remove-the-key-with-the-nearest-expire-time-minor-TTL"><a href="#volatile-ttl-gt-remove-the-key-with-the-nearest-expire-time-minor-TTL" class="headerlink" title="volatile-ttl -&gt; remove the key with the nearest expire time (minor TTL)"></a>volatile-ttl -&gt; remove the key with the nearest expire time (minor TTL)</h1><p>设置更早过期时间的key有限移除（或者是快过期的key）</p>
-<h1 id="noeviction-gt-don’t-expire-at-all-just-return-an-error-on-write-operations"><a href="#noeviction-gt-don’t-expire-at-all-just-return-an-error-on-write-operations" class="headerlink" title="noeviction -&gt; don’t expire at all, just return an error on write operations"></a>noeviction -&gt; don’t expire at all, just return an error on write operations</h1><p>当内存不足时以容纳新写入的数据时，新写入操作就会抛出异常</p>
+<p>volatile-lru -&gt; remove the key with an expire set using an LRU algorithm</p>
+<p>内存不足时，在设置过期时间的键空间内，移除最近最少使用的key</p>
+<p>allkeys-lru -&gt; remove any key according to the LRU algorithm</p>
+<p>当内存不足时，移除最近最少使用的key</p>
+<p>volatile-random -&gt; remove a random key with an expire set</p>
+<p>内存不足时，在设置过期时间的键控件，随机移除</p>
+<p>allkeys-random -&gt; remove a random key, any key</p>
+<p>内存不足是，随机移除</p>
+<p>volatile-ttl -&gt; remove the key with the nearest expire time (minor TTL)</p>
+<p>设置更早过期时间的key有限移除（或者是快过期的key）</p>
+<p>noeviction -&gt; don’t expire at all, just return an error on write operations</p>
+<p>当内存不足时以容纳新写入的数据时，新写入操作就会抛出异常</p>
 <p>##缓存穿透：<br>    黑客估计查询缓存中不存在的数据，导致所有的请求都去数据库查询，从而使数据库连接异常。<br>    解决方案：<br>        1 利用互斥锁，缓存失效时，获取锁，待数据取回，更新至缓存，释放锁。没得到锁的，等待。（互斥锁、悲观锁、乐观锁）</p>
 <pre><code>2 异步更新，监听缓存失效状态，通知后台更新缓存的策略。（需预加载数据）
 
@@ -381,7 +387,7 @@
     2 使用互斥锁，但会影响吞吐量
 
     3 双缓存，错开失效时间
-</code></pre><p>问题： 1 互斥锁 、多线程安全等如何实施？<br>      2 redis集群的存储策略？<br>      3 redis.conf 配置参数的意义？<br>      4 redis存储类型以及使用场景？</p>
+</code></pre><p>问题： 1 互斥锁 、多线程安全等如何实施？<br>​      2 redis集群的存储策略？<br>​      3 redis.conf 配置参数的意义？<br>​      4 redis存储类型以及使用场景？<br>​      </p>
 
       
     </div>
@@ -566,7 +572,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile-lru-gt-remove-the-key-with-an-expire-set-using-an-LRU-algorithm"><span class="nav-number">1.</span> <span class="nav-text">volatile-lru -&gt; remove the key with an expire set using an LRU algorithm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#allkeys-lru-gt-remove-any-key-according-to-the-LRU-algorithm"><span class="nav-number">2.</span> <span class="nav-text">allkeys-lru -&gt; remove any key according to the LRU algorithm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile-random-gt-remove-a-random-key-with-an-expire-set"><span class="nav-number">3.</span> <span class="nav-text">volatile-random -&gt; remove a random key with an expire set</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#allkeys-random-gt-remove-a-random-key-any-key"><span class="nav-number">4.</span> <span class="nav-text">allkeys-random -&gt; remove a random key, any key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile-ttl-gt-remove-the-key-with-the-nearest-expire-time-minor-TTL"><span class="nav-number">5.</span> <span class="nav-text">volatile-ttl -&gt; remove the key with the nearest expire time (minor TTL)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#noeviction-gt-don’t-expire-at-all-just-return-an-error-on-write-operations"><span class="nav-number">6.</span> <span class="nav-text">noeviction -&gt; don’t expire at all, just return an error on write operations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">6.1.</span> <span class="nav-text">缓存雪崩</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">1.</span> <span class="nav-text">缓存雪崩</span></a></li></ol></div>
             
 
           </div>

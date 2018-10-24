@@ -364,8 +364,9 @@
         
           
           Redis 相关配置说明maxmemory-policy:
-volatile-lru -&gt; remove the key with an expire set using an LRU algorithm内存不足时，在设置过期时间的键空间内，移除最近最少使用的key
-allkeys-lru -
+volatile-lru -&gt; remove the key with an expire set using an LRU algorithm
+内存不足时，在设置过期时间的键空间内，移除最近最少使用的key
+allkeys-lru 
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1117,8 +1118,8 @@ Parcable Android序列化的另一种操作模式 与Externalizable方式相似
       
         
           
-          服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a 
-`2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种
+          服务器句柄数相关命令1. 查看当前用户的文件句柄限制ulimit -a 
+2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制
           ...
           <!--noindex-->
           <div class="post-button text-center">

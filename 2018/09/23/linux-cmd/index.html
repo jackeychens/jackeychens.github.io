@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a  `2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限">
+<meta name="description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制ulimit -a  2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的">
 <meta name="keywords" content="java,linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux 服务器命令">
 <meta property="og:url" content="http://yoursite.com/2018/09/23/linux-cmd/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a  `2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限">
+<meta property="og:description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制ulimit -a  2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-24T01:54:07.082Z">
+<meta property="og:updated_time" content="2018-10-23T08:39:19.984Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux 服务器命令">
-<meta name="twitter:description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制`ulimit -a  `2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限">
+<meta name="twitter:description" content="服务器句柄数相关命令1. 查看当前用户的文件句柄限制ulimit -a  2. 用户级别的句柄数限制修改。修改 /etc/security/limits.conf 增加下面的代码：用户名(或者用*表示所有用户)  soft nofile 65535用户名 hard nofile 65535有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的">
 
 
 
@@ -362,8 +362,8 @@
       
 
       
-        <h2 id="服务器句柄数相关命令"><a href="#服务器句柄数相关命令" class="headerlink" title="服务器句柄数相关命令"></a>服务器句柄数相关命令</h2><h4 id="1-查看当前用户的文件句柄限制"><a href="#1-查看当前用户的文件句柄限制" class="headerlink" title="1. 查看当前用户的文件句柄限制"></a>1. 查看当前用户的文件句柄限制</h4><p>`<br>ulimit -a </p>
-<h2 id=""><a href="#" class="headerlink" title="`"></a>`</h2><h4 id="2-用户级别的句柄数限制修改。"><a href="#2-用户级别的句柄数限制修改。" class="headerlink" title="2. 用户级别的句柄数限制修改。"></a>2. 用户级别的句柄数限制修改。</h4><p>修改 /etc/security/limits.conf 增加下面的代码：<br>用户名(或者用*表示所有用户)  soft nofile 65535<br>用户名 hard nofile 65535<br>有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常了。</p>
+        <h2 id="服务器句柄数相关命令"><a href="#服务器句柄数相关命令" class="headerlink" title="服务器句柄数相关命令"></a>服务器句柄数相关命令</h2><h4 id="1-查看当前用户的文件句柄限制"><a href="#1-查看当前用户的文件句柄限制" class="headerlink" title="1. 查看当前用户的文件句柄限制"></a>1. 查看当前用户的文件句柄限制</h4><p>ulimit -a </p>
+<h4 id="2-用户级别的句柄数限制修改。"><a href="#2-用户级别的句柄数限制修改。" class="headerlink" title="2. 用户级别的句柄数限制修改。"></a>2. 用户级别的句柄数限制修改。</h4><p>修改 /etc/security/limits.conf 增加下面的代码：<br>用户名(或者用*表示所有用户)  soft nofile 65535<br>用户名 hard nofile 65535<br>有两种限制，一种是soft软限制，在数目超过软限制的时候系统会给出warning警告，但是达到hard硬限制的时候系统将拒绝或者异常了。</p>
 <h2 id="修改之后可能需要重启shell生效。"><a href="#修改之后可能需要重启shell生效。" class="headerlink" title="修改之后可能需要重启shell生效。"></a>修改之后可能需要重启shell生效。</h2><h4 id="3-系统级别的句柄数限制修改。"><a href="#3-系统级别的句柄数限制修改。" class="headerlink" title="3. 系统级别的句柄数限制修改。"></a>3. 系统级别的句柄数限制修改。</h4><p><code>sysctl -w fs.file-max 65536</code><br>或<br><code>echo &quot;65536&quot; &gt; /proc/sys/fs/file-max</code><br>两者作用是相同的，前者改内核参数，后者直接作用于内核参数在虚拟文件系统（procfs, psuedo file system）上对应的文件而已。<br>可以用下面的命令查看新的限制<br><code>sysctl -a | grep fs.file-max</code><br>或者<br><code>cat /proc/sys/fs/file-max</code><br>修改内核参数<br>(<code>)
 /etc/sysctl.conf
 echo &quot;fs.file-max=65536&quot; &gt;&gt; /etc/sysctl.conf
@@ -569,7 +569,7 @@ sysctl -p
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器句柄数相关命令"><span class="nav-number">1.</span> <span class="nav-text">服务器句柄数相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-查看当前用户的文件句柄限制"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 查看当前用户的文件句柄限制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">2.</span> <span class="nav-text">`</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-用户级别的句柄数限制修改。"><span class="nav-number">2.0.1.</span> <span class="nav-text">2. 用户级别的句柄数限制修改。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改之后可能需要重启shell生效。"><span class="nav-number">3.</span> <span class="nav-text">修改之后可能需要重启shell生效。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-系统级别的句柄数限制修改。"><span class="nav-number">3.0.1.</span> <span class="nav-text">3. 系统级别的句柄数限制修改。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他命令"><span class="nav-number">3.0.2.</span> <span class="nav-text">其他命令</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器句柄数相关命令"><span class="nav-number">1.</span> <span class="nav-text">服务器句柄数相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-查看当前用户的文件句柄限制"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 查看当前用户的文件句柄限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-用户级别的句柄数限制修改。"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 用户级别的句柄数限制修改。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改之后可能需要重启shell生效。"><span class="nav-number">2.</span> <span class="nav-text">修改之后可能需要重启shell生效。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-系统级别的句柄数限制修改。"><span class="nav-number">2.0.1.</span> <span class="nav-text">3. 系统级别的句柄数限制修改。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他命令"><span class="nav-number">2.0.2.</span> <span class="nav-text">其他命令</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

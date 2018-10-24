@@ -87,10 +87,17 @@
 <meta property="og:site_name" content="个人博客">
 <meta property="og:description" content="​    本文目的主要把Webview的一些部分知识点与常见问题记录下来。不重复阐述Webview的基本用法和写法了。 在webview中 native 与JS交互1 Android原生调用js方法关于Android原生代码调动H5内的JS方法，大致方法有两种：  通过webview的loadurl方法，直接调用js。这种方法十分简单，有兴趣可以写一个简单的alert JS函数放置于本地，通过lo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-23T02:41:33.619Z">
+<meta property="og:image" content="http://yoursite.com/Users/apple/Documents/Android%20WebView与JS交互.png">
+<meta property="og:image" content="https://blog.csdn.net/yu280265067/article/details/73379145">
+<meta property="og:image" content="https://blog.csdn.net/yu280265067/article/details/73379145">
+<meta property="og:image" content="https://blog.csdn.net/yu280265067/article/details/73379145">
+<meta property="og:image" content="https://blog.csdn.net/yu280265067/article/details/73379145">
+<meta property="og:image" content="https://blog.csdn.net/yu280265067/article/details/73379145">
+<meta property="og:updated_time" content="2018-10-24T08:14:26.137Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记Webview得一些知识">
 <meta name="twitter:description" content="​    本文目的主要把Webview的一些部分知识点与常见问题记录下来。不重复阐述Webview的基本用法和写法了。 在webview中 native 与JS交互1 Android原生调用js方法关于Android原生代码调动H5内的JS方法，大致方法有两种：  通过webview的loadurl方法，直接调用js。这种方法十分简单，有兴趣可以写一个简单的alert JS函数放置于本地，通过lo">
+<meta name="twitter:image" content="http://yoursite.com/Users/apple/Documents/Android%20WebView与JS交互.png">
 
 
 
@@ -348,8 +355,519 @@
 <li><p>通过webview的evaluateJavascript方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Asynchronously evaluates JavaScript in the context of the currently displayed page.</span></span><br><span class="line"><span class="comment">     * If non-null, |resultCallback| will be invoked with any result returned from that</span></span><br><span class="line"><span class="comment">     * execution. This method must be called on the UI thread and the callback will</span></span><br><span class="line"><span class="comment">     * be made on the UI thread.</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * Compatibility note. Applications targeting &#123;<span class="doctag">@link</span> android.os.Build.VERSION_CODES#N&#125; or</span></span><br><span class="line"><span class="comment">     * later, JavaScript state from an empty WebView is no longer persisted across navigations like</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> #loadUrl(String)&#125;. For example, global variables and functions defined before calling</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> #loadUrl(String)&#125; will not exist in the loaded page. Applications should use</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> #addJavascriptInterface&#125; instead to persist JavaScript objects across navigations.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> script the JavaScript to execute.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> resultCallback A callback to be invoked when the script execution</span></span><br><span class="line"><span class="comment">     *                       completes with the result of the execution (if any).</span></span><br><span class="line"><span class="comment">     *                       May be null if no notification of the result is required.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">evaluateJavascript</span><span class="params">(String script, ValueCallback&lt;String&gt; resultCallback)</span> </span>&#123;</span><br><span class="line">        checkThread();</span><br><span class="line">        mProvider.evaluateJavaScript(script, resultCallback);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>从源码注释中，明确该方法是Android N版本才有，所以如果版本小于Android N，则需使用两种方法合并。合并代码就不在这里贴出来了。</p>
+<h5 id="2-JS调用Android原生代码"><a href="#2-JS调用Android原生代码" class="headerlink" title="2 JS调用Android原生代码"></a>2 JS调用Android原生代码</h5><p>关于js调用Android原生大致有3中</p>
+<ol>
+<li>通过webview的addJavaScriptInterface映射,注意在定义方法是需要添加@JavascriptInterface</li>
+<li>通过定义特殊的scheme的url，使用webviewclient的<strong>shouldOverrideUrlLoading**</strong>方法**去拦截url，通过判定url的scheme进行特殊处理。</li>
+<li>通过webchromeClient的onJsAlert,onJsConfirm,onJsprompt拦截js的alert,confirm,prompt方法</li>
+</ol>
+<p><img src="/Users/apple/Documents/Android WebView与JS交互.png" alt=""></p>
 </li>
 </ol>
+<h4 id="webview的使用问题以及优化措施"><a href="#webview的使用问题以及优化措施" class="headerlink" title="webview的使用问题以及优化措施"></a>webview的使用问题以及优化措施</h4><h5 id="在使用webview加载h5时，打开经常十分缓慢"><a href="#在使用webview加载h5时，打开经常十分缓慢" class="headerlink" title="在使用webview加载h5时，打开经常十分缓慢"></a>在使用webview加载h5时，打开经常十分缓慢</h5><p>部分H5图片内容过多，导致加载十分缓慢。可以用以下方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">webview.setWebViewClient(<span class="keyword">new</span> WebViewClient() &#123;</span><br><span class="line"></span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageStarted</span><span class="params">(WebView view, String url, Bitmap favicon)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onPageStarted(view, url, favicon);</span><br><span class="line">               webview.getSettings().setBlockNetworkImage(<span class="keyword">true</span>);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageFinished</span><span class="params">(WebView view, String url)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onPageFinished(view, url);</span><br><span class="line">               webview.getSettings().setBlockNetworkImage(<span class="keyword">false</span>);</span><br><span class="line">               <span class="keyword">if</span> (!webview.getSettings().getLoadsImagesAutomatically()) &#123;</span><br><span class="line">                   <span class="comment">//设置wenView加载图片资源</span></span><br><span class="line">                   webview.getSettings().setBlockNetworkImage(<span class="keyword">false</span>);</span><br><span class="line">                   webview.getSettings().setLoadsImagesAutomatically(<span class="keyword">true</span>);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br></pre></td></tr></table></figure>
+<p>通过以上这段代码设置图片懒加载，在完成网页加载后，在进行图片加载。已提升H5页面展示效率。</p>
+<p>其次，在H5页面中也可以对该部分进行优化，已提升页面加载效率，如使用占位符，数据缓存等方式。</p>
+<h5 id="使用全局webview对象"><a href="#使用全局webview对象" class="headerlink" title="使用全局webview对象"></a>使用全局webview对象</h5><h5 id="非静态H5页面，由native侧进行数据获取，通过native调用js方法，对H5页面数据进行刷新"><a href="#非静态H5页面，由native侧进行数据获取，通过native调用js方法，对H5页面数据进行刷新" class="headerlink" title="非静态H5页面，由native侧进行数据获取，通过native调用js方法，对H5页面数据进行刷新"></a>非静态H5页面，由native侧进行数据获取，通过native调用js方法，对H5页面数据进行刷新</h5><p>对于一个普通用户来讲，打开一个WebView通常会经历以下几个阶段：</p>
+<ol>
+<li>交互无反馈</li>
+<li>到达新的页面，页面白屏</li>
+<li>页面基本框架出现，但是没有数据；页面处于loading状态</li>
+<li>出现所需的数据</li>
+</ol>
+<p>如果从程序上观察，WebView启动过程大概分为以下几个阶段：</p>
+<p><img src="https://blog.csdn.net/yu280265067/article/details/73379145" alt="img"></p>
+<p>如何缩短这些过程的时间，就成了优化WebView性能的关键。</p>
+<p>接下来我们逐一分析各个阶段的耗时情况，以及需要注意的优化点。</p>
+<h2 id="WebView初始化"><a href="#WebView初始化" class="headerlink" title="WebView初始化"></a>WebView初始化</h2><p>当App首次打开时，默认是并不初始化浏览器内核的；只有当创建WebView实例的时候，才会创建WebView的基础框架。</p>
+<p>所以与浏览器不同，App中打开WebView的第一步并不是建立连接，而是启动浏览器内核。</p>
+<p>我们来分析一下这段耗时到底需要多久。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>针对WebView的初始化时间，我们可以定义两个指标：</p>
+<ul>
+<li>首次初始化时间：客户端冷启动后，第一次打开WebView，从开始创建WebView到开始建立网络连接之间的时间。</li>
+<li>二次初始化时间：在打开过WebView后，退出WebView，再重新打开WebView，从开始创建WebView到开始建立网络连接之间的时间。</li>
+</ul>
+<p>测试数据：</p>
+<blockquote>
+<p>测试系统1： iOS模拟器，Titans 10.0.7</p>
+<p>测试系统2： OPPO R829T Android 4.2.2</p>
+<p>测试方式：测试10次取平均值</p>
+<p>测试App：美团外卖</p>
+<p>单位：ms</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>首次初始化时间</th>
+<th>二次初始化时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iOS（UIWebView）</td>
+<td>306.56</td>
+<td>76.43</td>
+</tr>
+<tr>
+<td>iOS（WKWebView）</td>
+<td>763.26</td>
+<td>457.25</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>192.79 *</td>
+<td>142.53</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>*Android外卖客户端启动后会在后台开启WebView进程，故并不是完全新建WebView时间。</p>
+</blockquote>
+<h3 id="这意味着什么呢？"><a href="#这意味着什么呢？" class="headerlink" title="这意味着什么呢？"></a>这意味着什么呢？</h3><p>作为前端工程师，统计了无数次的页面打开时间，都是以网络连接开始作为起点的。</p>
+<p>很遗憾的通知您：WebView中用户体验到的打开时间需要再增加70~700ms。</p>
+<p>于是我们找到了“为什么WebView总是很慢”的原因之一：</p>
+<ul>
+<li>在浏览器中，我们输入地址时（甚至在之前），浏览器就可以开始加载页面。</li>
+<li>而在客户端中，客户端需要先花费时间初始化WebView完成后，才开始加载。</li>
+</ul>
+<p>而这段时间，由于WebView还不存在，所有后续的过程是完全阻塞的。可以这样形容WebView初始化过程：</p>
+<p><img src="https://blog.csdn.net/yu280265067/article/details/73379145" alt="img"></p>
+<p>那么有哪些解决办法呢？</p>
+<h3 id="怎么优化"><a href="#怎么优化" class="headerlink" title="怎么优化"></a>怎么优化</h3><p>由于这段过程发生在native的代码中，单纯靠前端代码是无法优化的；大部分的方案都是前端和客户端协作完成，以下是几个业界采用过的方案。</p>
+<h4 id="全局WebView"><a href="#全局WebView" class="headerlink" title="全局WebView"></a>全局WebView</h4><p>方法：</p>
+<ul>
+<li>在客户端刚启动时，就初始化一个全局的WebView待用，并隐藏；</li>
+<li>当用户访问了WebView时，直接使用这个WebView加载对应网页，并展示。</li>
+</ul>
+<p>这种方法可以比较有效的减少WebView在App中的首次打开时间。当用户访问页面时，不需要初始化WebView的时间。</p>
+<p>当然这也带来了一些问题，包括：</p>
+<ul>
+<li>额外的内存消耗。</li>
+<li>页面间跳转需要清空上一个页面的痕迹，更容易内存泄露。</li>
+</ul>
+<blockquote>
+<p>【参考东软专利 - 加载网页的方法及装置 <a href="https://www.google.com/patents/CN106250434A?cl=zh" target="_blank" rel="noopener">CN106250434A</a>】</p>
+</blockquote>
+<h4 id="客户端代理数据请求"><a href="#客户端代理数据请求" class="headerlink" title="客户端代理数据请求"></a>客户端代理数据请求</h4><p>方法：</p>
+<ul>
+<li>在客户端初始化WebView的同时，直接由native开始网络请求数据；</li>
+<li>当页面初始化完成后，向native获取其代理请求的数据。</li>
+</ul>
+<p>此方法虽然不能减小WebView初始化时间，但数据请求和WebView初始化可以并行进行，总体的页面加载时间就缩短了；缩短总体的页面加载时间：</p>
+<blockquote>
+<p>【参考腾讯分享：<a href="http://mp.weixin.qq.com/s/evzDnTsHrAr2b9jcevwBzA" target="_blank" rel="noopener">70%以上业务由H5开发，手机QQ Hybrid 的架构如何优化演进？</a>】</p>
+</blockquote>
+<p>还有其他各种优化的方式，不再一一列举，总结起来都是围绕两点：</p>
+<ol>
+<li>在使用前预先初始化好WebView，从而减小耗时。</li>
+<li>在初始化的同时，通过Native来完成一些网络请求等过程，使得WebView初始化不是完全的阻塞后续过程。</li>
+</ol>
+<h2 id="建立连接-服务器处理"><a href="#建立连接-服务器处理" class="headerlink" title="建立连接/服务器处理"></a>建立连接/服务器处理</h2><p>在页面请求的数据返回之前，主要有以下过程耗费时间。</p>
+<ul>
+<li>DNS</li>
+<li>connection</li>
+<li>服务器处理</li>
+</ul>
+<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>以下为美团中活动页面的链接时间统计：</p>
+<blockquote>
+<p>统计： 美团的活动页面</p>
+<p>内容值： n%分位值（ms）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>DNS</th>
+<th>connection</th>
+<th>获取首字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50%</td>
+<td>1.3</td>
+<td>71</td>
+<td>172</td>
+</tr>
+<tr>
+<td>90%</td>
+<td>60</td>
+<td>360</td>
+<td>541</td>
+</tr>
+</tbody>
+</table>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>这些时间都是发生在网页加载之前，但这并不意味着无法优化，有以下几种方法。</p>
+<h4 id="DNS采用和客户端API相同的域名"><a href="#DNS采用和客户端API相同的域名" class="headerlink" title="DNS采用和客户端API相同的域名"></a>DNS采用和客户端API相同的域名</h4><p>DNS会在系统级别进行缓存，对于WebView的地址，如果使用的域名与native的API相同，则可以直接使用缓存的DNS而不用再发起请求图片。</p>
+<p>以美团为例，美团的客户端请求域名主要位于api.meituan.com，然而内嵌的WebView主要位于 i.meituan.com。</p>
+<p>当我们初次打开App时：</p>
+<ul>
+<li>客户端首次打开都会请求api.meituan.com，其DNS将会被系统缓存。</li>
+<li>然而当打开WebView的时候，由于请求了不同的域名，需要重新获取i.meituan.com的IP。</li>
+</ul>
+<p>根据上面的统计，至少10%的用户打开WebView时耗费了60ms在DNS上面，如果WebView的域名与App的API域名统一，则可以让WebView的DNS时间全部达到1.3ms的量级。</p>
+<p>静态资源同理，最好与客户端的资源域名保持一致。</p>
+<h4 id="同步渲染采用chunk编码"><a href="#同步渲染采用chunk编码" class="headerlink" title="同步渲染采用chunk编码"></a>同步渲染采用chunk编码</h4><p>同步渲染时如果后端请求时间过长，可以考虑采用chunk编码，将数据放在最后，并优先将静态内容flush。对于传统的后端渲染页面，往往都是使用的【浏览器】–&gt; 【Web API】 –&gt; 【业务 API】的加载模式，其中后端时间就指的是Web API的处理时间了。在这里Web API一般有两个作用：</p>
+<ol>
+<li>确定静态资源的版本。</li>
+<li>根据用户的请求，去业务API获取数据。</li>
+</ol>
+<p>而一般确定静态资源的版本往往是直接读取代码版本，基本无耗时；而主要的后端时间都花费在了业务API请求上面。</p>
+<p>那么怎么优化利用这段时间呢？</p>
+<p>在HTTP协议中，我们可以在header中设置 <code>transfer-encoding:chunked</code> 使得页面可以分块输出。如果合理设计页面，让head部分都是确定的静态资源版本相关内容，而body部分是业务数据相关内容，那么我们可以在用户请求的时候，首先将Web API可以确定的部分先输出给浏览器，然后等API完全获取后，再将API数据传输给浏览器。</p>
+<p>下图可以直观的看出分chunk输出和一起输出的区别：</p>
+<p><img src="https://blog.csdn.net/yu280265067/article/details/73379145" alt="img"></p>
+<ul>
+<li>如果采用普通方式输出页面，则页面会在服务器请求完所有API并处理完成后开始传输。浏览器要在后端所有API都加载完成后才能开始解析。</li>
+<li>如果采用chunk-encoding: chunked，并优先将页面的静态部分输出；然后处理API请求，并最终返回页面，可以让后端的API请求和前端的资源加载同时进行。</li>
+<li>两者的总共后端时间并没有区别，但是可以提升首字节速度，从而让前端加载资源和后端加载API不互相阻塞。</li>
+</ul>
+<h2 id="页面框架渲染"><a href="#页面框架渲染" class="headerlink" title="页面框架渲染"></a>页面框架渲染</h2><p>页面在解析到足够多的节点，且所有CSS都加载完成后进行首屏渲染。在此之前，页面保持白屏；在页面完全下载并解析完成之前，页面处于不完整展示状态。</p>
+<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>我们以一个美团的活动页面作为样例：</p>
+<blockquote>
+<p>测试页面：<a href="http://i.meituan.com/firework/meituanxianshifengqiang" target="_blank" rel="noopener">http://i.meituan.com/firework/meituanxianshifengqiang</a></p>
+<p>在Mac上面，模拟4G情况</p>
+<p>页面样式：</p>
+</blockquote>
+<p><img src="https://blog.csdn.net/yu280265067/article/details/73379145" alt="img"></p>
+<p>测试得到的时间耗费如下：</p>
+<p>表1</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>阶段</th>
+<th>时间</th>
+<th>大小</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DOM下载</td>
+<td>58ms</td>
+<td>29.5 KB</td>
+<td>4G网络</td>
+<td></td>
+</tr>
+<tr>
+<td>DOM解析</td>
+<td>12.5ms</td>
+<td>198 KB</td>
+<td>根据估算，在手机上慢2~5倍不等</td>
+<td></td>
+</tr>
+<tr>
+<td>CSS请求+下载</td>
+<td>58ms</td>
+<td>11.7 KB</td>
+<td>4G网络（包含链接时间，CDN）</td>
+<td></td>
+</tr>
+<tr>
+<td>CSS解析</td>
+<td>2.89ms</td>
+<td>54.1 KB</td>
+<td>根据估算，在手机上慢2~5倍不等</td>
+<td></td>
+</tr>
+<tr>
+<td>渲染</td>
+<td>23ms</td>
+<td>1361节点</td>
+<td>根据估算，在手机上慢2~5倍不等</td>
+<td></td>
+</tr>
+<tr>
+<td>绘制</td>
+<td>4.1ms</td>
+<td></td>
+<td>根据估算，在手机上慢2~5倍不等</td>
+<td></td>
+</tr>
+<tr>
+<td>合成</td>
+<td>0.23ms</td>
+<td></td>
+<td>GPU处理</td>
+</tr>
+</tbody>
+</table>
+<p>同时，对HTML的加载时间进行分析，可以得到如下时间点。</p>
+<p>表2</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>指标</th>
+<th>时间</th>
+<th>计算方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML加载完成时间</td>
+<td>218</td>
+<td>performance.timing.responseEnd - performance.timing.fetchStart</td>
+<td></td>
+</tr>
+<tr>
+<td>HTML解析完成时间</td>
+<td>330</td>
+<td>performance.timing.domInteractive - performance.timing.fetchStart</td>
+</tr>
+</tbody>
+</table>
+<h3 id="这意味着什么呢？-1"><a href="#这意味着什么呢？-1" class="headerlink" title="这意味着什么呢？"></a>这意味着什么呢？</h3><h4 id="对于表1"><a href="#对于表1" class="headerlink" title="对于表1"></a>对于表1</h4><p>可以看到，随着在网络优良的情况下，Dom的解析所占耗时比例还是不算低的，对于低端机器更甚。Layout时间也是首屏前耗时的大头，据猜测这与页面使用了rem作为单位有关（待进一步分析）。</p>
+<h4 id="对于表2，我们可以发现一个问题"><a href="#对于表2，我们可以发现一个问题" class="headerlink" title="对于表2，我们可以发现一个问题"></a>对于表2，我们可以发现一个问题</h4><p>一般来说HTML在开始接收到返回数据的时候就开始解析HTML并构建DOM树。如果没有JS（JavaScript）阻塞的话一般会相继完成。然而，在这里时间相差了90ms……也就是说，解析被阻塞了。</p>
+<p>进一步分析可以发现，页面的header部分有这样的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">.....</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;link href=&quot;//ms0.meituan.net/css/eve.9d9eee71.css&quot; rel=&quot;stylesheet&quot; onload=&quot;MT.pageData.eveTime=Date.now()&quot;/&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">window.fk = function (callback) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">require([&apos;util/native/risk.js&apos;], function (risk) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    risk.getFk(callback);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>通常情况下，上面代码的link部分和script部分如果单独出现，都不会阻塞页面的解析：</p>
+<ul>
+<li>CSS不会阻止页面继续向下继续。</li>
+<li>内联的JS很快执行完成，然后继续解析文档。</li>
+</ul>
+<p>然而，当这两部分同时出现的时候，问题就来了。</p>
+<ul>
+<li>CSS加载阻塞了下面的一段内联JS的执行，而被阻塞的内联JS则阻塞了HTML的解析。</li>
+</ul>
+<p>通常情况下，CSS不会阻塞HTML的解析，但如果CSS后面有JS，则会阻塞JS的执行直到CSS加载完成（即便JS是内联的脚本），从而间接阻塞HTML的解析。</p>
+<h3 id="优化-1"><a href="#优化-1" class="headerlink" title="优化"></a>优化</h3><p>在页面框架加载这一部分，能够优化的点参照<a href="https://stevesouders.com/hpws/rules.php" target="_blank" rel="noopener">雅虎14条</a>就够了；但注意不要犯错，一个小小的内联JS放错位置也会让性能下降很多。</p>
+<ol>
+<li>CSS的加载会在HTML解析到CSS的标签时开始，所以CSS的标签要尽量靠前。</li>
+<li>但是，CSS链接下面不能有任何的JS标签（包括很简单的内联JS），否则会阻塞HTML的解析。</li>
+<li>如果必须要在头部增加内联脚本，一定要放在CSS标签之前。</li>
+</ol>
+<p><img src="https://blog.csdn.net/yu280265067/article/details/73379145" alt="img"></p>
+<h2 id="JS加载"><a href="#JS加载" class="headerlink" title="JS加载"></a>JS加载</h2><p>对于大型的网站来说，在此我们先提出几个问题：</p>
+<ul>
+<li>将全部JS代码打成一个包，造成首次执行代码过大怎么办？</li>
+<li>将JS以细粒度打包，造成请求过多怎么办？</li>
+<li>将JS按 “基础库” + “页面代码” 分别打包，要怎么界定什么是基础代码，什么是页面代码；不同页面用的基础代码不一致怎么办？</li>
+<li>单一文件的少量代码改的是否会导致缓存失效？</li>
+<li>代码模块间有动态依赖，怎样合并请求。</li>
+</ul>
+<p>关于这些问题的解决方案数量可能会比问题还多，而它们也各有优劣。</p>
+<p>具体分析太过复杂，鉴于篇幅原因在这里不做具体分析了。您可以期待我们的后续计划：BPM（浏览器包管理）。</p>
+<h2 id="JS解析、编译、执行"><a href="#JS解析、编译、执行" class="headerlink" title="JS解析、编译、执行"></a>JS解析、编译、执行</h2><p>在PC互联网时代，人们似乎都快忘记了JS的解析和执行还需要消耗时间。确实，在几年前网速还在用kb衡量的时代里，JS的解析时间在整个页面的打开时间里只能算是九牛一毛。</p>
+<p>然而，随着网速越来越快，而CPU的速度反而没有提升（从PC到手机），JS的时间开销就成为问题了。那么JS的编译和解析，在当今的页面上要消耗多少时间呢？</p>
+<h3 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h3><p>我们用以下方式来检验JS代码的解析/编译和执行时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    window.t1 = performance.now()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    window.test = function () &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // test code</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    window.t2 = performance.now()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    test();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    window.t3 = performance.now();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    alert(&quot;编译耗时：&quot; + (t2 - t1));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    alert(&quot;执行耗时：&quot; + (t3 - t2));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>将测试代码放入 【test code】 位置，然后在手机中执行；</p>
+<ul>
+<li>在t1~t2期间，JS代码仅仅声明了一个函数，主要时间会集中在解析和编译过程；</li>
+<li>在t2~t3时间段内，执行test时时间主要为代码的执行时间</li>
+</ul>
+<p>在首次启动客户端后，打开WebView的测试页面，我们可以得到如下的结果：</p>
+<blockquote>
+<p>测试系统： iPhone6 iOS 10.2.1</p>
+<p>测试系统： OPPO R829T Android 4.2.2</p>
+<p>内容值： 编译时间（ms）/执行时间（ms）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>Zepto.js</th>
+<th>Vue.js</th>
+<th>React.js + ReactDOM.js</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iOS</td>
+<td>5.2 / 8</td>
+<td>12.8 / 16.1</td>
+<td>13.7 / 43.3</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>13 / 40</td>
+<td>43 / 127</td>
+<td>26 / 353</td>
+</tr>
+</tbody>
+</table>
+<p>当保持客户端进行不关闭情况下，关闭WebView并重新访问测试页面，再次测试得到如下结果：</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>Zepto.js</th>
+<th>Vue.js</th>
+<th>React.js + ReactDom.js</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iOS</td>
+<td>0.9 / 1.9</td>
+<td>5 / 7.4</td>
+<td>3.5 / 23</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>5 / 9</td>
+<td>17 / 12</td>
+<td>25 / 60</td>
+</tr>
+</tbody>
+</table>
+<p>执行时间指的是框架代码加载的页面的初始化时间，没有任何业务的调用。</p>
+<h3 id="这意味着什么"><a href="#这意味着什么" class="headerlink" title="这意味着什么"></a>这意味着什么</h3><p>经过测试可以得出以下结论：</p>
+<ul>
+<li>偏重的框架，例如React，仅仅初始化的时间就会达到50ms ~ 350ms，这在对性能敏感的业务中时比较不利的。</li>
+<li>在App的启动周期内，统一域名下的代码会被缓存编辑和初始化结果，重复调用性能较好。</li>
+</ul>
+<p>所以，在移动浏览器上，JS的解析和执行时间并不是不可忽略的。</p>
+<p>在低端安卓机上，（框架的初始化+异步数据请求+业务代码执行）会远高于几KB网络请求时间；高性能的Web网站需要仔细斟酌前端渲染带来的性能问题。</p>
+<h3 id="优化-2"><a href="#优化-2" class="headerlink" title="优化"></a>优化</h3><ul>
+<li>高性能要求页面还是需要后端渲染。</li>
+<li>React还是太重了，面向用户写系统需要谨慎考虑。</li>
+<li>JS代码的编译和执行会有缓存，同App中网页尽量统一框架。</li>
+</ul>
+<h2 id="WebView性能优化总结"><a href="#WebView性能优化总结" class="headerlink" title="WebView性能优化总结"></a>WebView性能优化总结</h2><p>一个加载网页的过程中，native、网络、后端处理、CPU都会参与，各自都有必要的工作和依赖关系；让他们相互并行处理而不是相互阻塞才可以让网页加载更快：</p>
+<ul>
+<li>WebView初始化慢，可以在初始化同时先请求数据，让后端和网络不要闲着。</li>
+<li>后端处理慢，可以让服务器分trunk输出，在后端计算的同时前端也加载网络静态资源。</li>
+<li>脚本执行慢，就让脚本在最后运行，不阻塞页面解析。</li>
+<li>同时，合理的预加载、预缓存可以让加载速度的瓶颈更小。</li>
+<li>WebView初始化慢，就随时初始化好一个WebView待用。</li>
+<li>DNS和链接慢，想办法复用客户端使用的域名和链接。</li>
+<li>脚本执行慢，可以把框架代码拆分出来，在请求页面之前就执行好。</li>
+</ul>
+<h1 id="WebView内存消耗"><a href="#WebView内存消耗" class="headerlink" title="WebView内存消耗"></a>WebView内存消耗</h1><h3 id="分析-4"><a href="#分析-4" class="headerlink" title="分析"></a>分析</h3><p>为了测试WebView会消耗多少内存，我们设计了如下的测试方案：</p>
+<ol>
+<li>客户端启动后，记录消耗的内存。</li>
+<li>打开空页面，记录内存的上涨。</li>
+<li>退出。</li>
+<li>打开空页面，记录内存上涨。</li>
+<li>退出。</li>
+<li>打开加载了代码的页面，记录内存的额外增加。</li>
+</ol>
+<p>得到如下测试结果：</p>
+<blockquote>
+<p>测试系统： iOS模拟器，Titans 10.0.7</p>
+<p>测试系统： OPPO R829T Android 4.2.2</p>
+<p>测试方式：测试10次取平均值</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>首次打开增加内存</th>
+<th>二次打开增加内存</th>
+<th>加载KNB+VUE+灵犀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iOS UIWebView</td>
+<td>31.1M</td>
+<td>5.52M</td>
+<td>2M</td>
+</tr>
+<tr>
+<td>iOS WKWebView</td>
+<td>1.95M</td>
+<td>1.6M</td>
+<td>2M</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>32.2M</td>
+<td>6.62M</td>
+<td>1.7M</td>
+</tr>
+</tbody>
+</table>
+<p>WKWebView的内存消耗相比其他低了一个数量级，在此方面相当占优。</p>
+<p>UIWebView和Android的WebView在首次初始化时都要消耗大量内存，之后每次新建WebView会额外增加一些。</p>
+<p>UIWebView的内存占用不会在关闭WebView时主动回收，每次新开WebView都会消耗额外内存。</p>
+<p>相比于性能，对于内存的优化可以做的还是比较有限的。</p>
+<ul>
+<li>WKWebView的内存占用优势比较大（代价是初始化比较慢）。</li>
+<li>页面内代码消耗的内存相比与WebView系统的内存消耗相比可以说是很低。</li>
+</ul>
+<h1 id="WebView体验"><a href="#WebView体验" class="headerlink" title="WebView体验"></a>WebView体验</h1><p>除了打开的速度，WebView通常体验也没有native的实现更好，我们可以找到以下几个例子：</p>
+<h3 id="长按选择"><a href="#长按选择" class="headerlink" title="长按选择"></a>长按选择</h3><p>在WebView中，长按文字会使得WebView默认开始选择文字；长按链接会弹出提示是否在新页面打开。</p>
+<p>解决方法：可以通过给body增加CSS来禁止这些默认规则。</p>
+<h3 id="点击延迟"><a href="#点击延迟" class="headerlink" title="点击延迟"></a>点击延迟</h3><p>在WebView中，click通常会有大约300ms的延迟（同时包括链接的点击，表单的提交，控件的交互等任何用户点击行为）。</p>
+<p>唯一的例外是设置的meta：viewpoint为禁止缩放的Chrome（然而并不是Android默认的浏览器）。</p>
+<p>解决方法：使用fastclick一般可以解决这个问题。</p>
+<h3 id="页面滑动期间不渲染-执行"><a href="#页面滑动期间不渲染-执行" class="headerlink" title="页面滑动期间不渲染/执行"></a>页面滑动期间不渲染/执行</h3><p>在很多需求中会有一些吸顶的元素，例如导航条，购买按钮等；当页面滚动超出元素高度后，元素吸附在屏幕顶部。</p>
+<p>这个功能在PC和native中都能够实现，然而在WebView中却成了难题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在页面滚动期间，Scroll Event不触发</span><br></pre></td></tr></table></figure>
+<p>不仅如此，WebView在滚动期间还有各种限定：</p>
+<ul>
+<li>setTimeout和setInterval不触发。</li>
+<li>GIF动画不播放。</li>
+<li>很多回调会延迟到页面停止滚动之后。</li>
+<li>background-position: fixed不支持。</li>
+<li>这些限制让WebView在滚动期间很难有较好的体验。</li>
+</ul>
+<p>这些限制大部分是不可突破的，但至少对于吸顶功能还是可以做一些支持：</p>
+<p>解决方法：</p>
+<ul>
+<li>在iOS上，使用position: sticky可以做到元素吸顶。</li>
+<li>在Android上，监听touchmove事件可以在滑动期间做元素的position切换（惯性运动期间就无效了）。</li>
+</ul>
+<h3 id="crash"><a href="#crash" class="headerlink" title="crash"></a>crash</h3><p>通常WebView并不能直接接触到底层的API，因此比较稳定；但仍然有使用不当造成整个App崩溃的情况。</p>
+<p>目前发现的案例包括：</p>
+<ul>
+<li>使用过大的图片（2M）</li>
+<li>不正常使用WebGL</li>
+</ul>
+<h1 id="WebView安全"><a href="#WebView安全" class="headerlink" title="WebView安全"></a>WebView安全</h1><h2 id="WebView被运营商劫持、注入问题"><a href="#WebView被运营商劫持、注入问题" class="headerlink" title="WebView被运营商劫持、注入问题"></a>WebView被运营商劫持、注入问题</h2><p>由于WebView加载的页面代码是从服务器动态获取的，这些代码将会很容易被中间环节所窃取或者修改，其中最主要的问题出自地方运营商（浙江尤其明显）和一些WiFi。</p>
+<p>我们监测到的问题包括：</p>
+<ul>
+<li>无视通信规则强制缓存页面。</li>
+<li>header被篡改。</li>
+<li>页面被注入广告。</li>
+<li>页面被重定向。</li>
+<li>页面被重定向并重新iframe到新页面，框架嵌入广告。</li>
+<li>HTTPS请求被拦截。</li>
+<li>DNS劫持。</li>
+</ul>
+<p>这些问题轻则影响用户体验，重则泄露数据，或影响公司信誉。</p>
+<p>针对页面注入的行为，有一些解决方案：</p>
+<h5 id="使用CSP（Content-Security-Policy）"><a href="#使用CSP（Content-Security-Policy）" class="headerlink" title="使用CSP（Content Security Policy）"></a>使用CSP（Content Security Policy）</h5><p>CSP可以有效的拦截页面中的非白名单资源，而且兼容性较好。在美团移动版的使用中，能够阻止大部分的页面内容注入。</p>
+<p>但在使用中还是存在以下问题：</p>
+<ul>
+<li>由于业务的需要，通常inline脚本还是在白名单中，会导致完全依赖内联的页面代码注入可以通过检测。</li>
+<li>如果注入的内容是纯HTML+CSS的内容，则CSP无能为力。</li>
+<li>无法解决页面被劫持的问题。</li>
+<li>会带来额外的一些维护成本。</li>
+</ul>
+<p>总体来说CSP是一个行之有效的防注入方案，但是如果对于安全要求更高的网站，这些还不够。</p>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p>HTTPS可以防止页面被劫持或者注入，然而其副作用也是明显的，网络传输的性能和成功率都会下降，而且HTTPS的页面会要求页面内所有引用的资源也是HTTPS的，对于大型网站其迁移成本并不算低。</p>
+<p>HTTPS的一个问题在于：一旦底层想要篡改或者劫持，会导致整个链接失效，页面无法展示。这会带来一个问题：本来页面只是会被注入广告，而且广告会被CSP拦截，而采用了HTTPS后，整个网页由于受到劫持完全无法展示。</p>
+<p>对于安全要求不高的静态页面，就需要权衡HTTPS带来的利与弊了。</p>
+<h4 id="App使用Socket代理请求"><a href="#App使用Socket代理请求" class="headerlink" title="App使用Socket代理请求"></a>App使用Socket代理请求</h4><p>如果HTTP请求容易被拦截，那么让App将其转换为一个Socket请求，并代理WebView的访问也是一个办法。</p>
+<p>通常不法运营商或者WiFi都只能拦截HTTP（S）请求，对于自定义的包内容则无法拦截，因此可以基本解决注入和劫持的问题。</p>
+<p>Socket代理请求也存在问题。</p>
+<ul>
+<li>首先，使用客户端代理的页面HTML请求将丧失边下载边解析的能力；根据前面所述，浏览器在HTML收到部分内容后就立刻开始解析，并加载解析出来的外链、图片等，执行内联的脚本……而目前WebView对外并没有暴露这种流式的HTML接口，只能由客户端完全下载好HTML后，注入到WebView中。因此其性能将会受到影响。</li>
+<li>其次，其技术问题也是较多的，例如对跳转的处理，对缓存的处理，对CDN的处理等等……稍不留神就会埋下若干大坑。</li>
+</ul>
+<p>此外还有一些其他的办法，例如页面的MD5检测，页面静态页打包下载等等方式，具体如何选择还要根据具体的场景抉择。</p>
+<h2 id="客户端内打开第三方WebView"><a href="#客户端内打开第三方WebView" class="headerlink" title="客户端内打开第三方WebView"></a>客户端内打开第三方WebView</h2><p>一般来说，客户端内的WebView都是可以通过客户端的某个schema打开的，而要打开页面的URL很多都并不写在客户端内，而是可以由URL中的参数传递过去的。</p>
+<p>那么，一旦此URL可以通过外界输入自定义，那么就有可能在客户端内部打开一个外部的网页。</p>
+<p>例：作案过程</p>
+<ul>
+<li>某个App有个WebView，打开的schema为 appxx://web?url={weburl}。</li>
+<li>App中有个扫码的功能，可以扫描某个二维码并打开对应的schema链接。</li>
+<li>某个坏人制作了一个二维码并张贴到街上，内容符合 ： appxx://web?url={some_hack_weburl}。</li>
+<li>用户扫码打开了some_hack_weburl。</li>
+<li>如果some_hack_weburl是一个高仿的登录页面，那么用户将会很可能将用户名密码提交到其他网站。</li>
+</ul>
+<p>解决方法：在内嵌的WebView中应该限制允许打开的WebView的域名，并设置运行访问的白名单。或者当用户打开外部链接前给用户强烈而明显的提示。</p>
+<h1 id="发展"><a href="#发展" class="headerlink" title="发展"></a>发展</h1><p>在一个客户端内，native目前主要功能是提供高效而基础的功能；内部的WebView则添加一些性能体验要求不高但动态化要求高的能力。</p>
+<p>提高客户端的动态能力，或者提高WebView的性能，都是提升App功能覆盖的方式。</p>
+<p>而目前的各种框架，ReactNative、Week包括微信小程序，都是这个趋势的尝试。</p>
+<p>随着技术的发展，WebView的性能、体验和安全问题也将会逐渐的改善，在App中占有越来越多比重的同时，也将会为App开拓新的能力，为用户带来更优质的体验。</p>
+<p>后续会持续维护本章，完善所了解的其他方式。</p>
 
       
     </div>
@@ -532,7 +1050,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#在webview中-native-与JS交互"><span class="nav-number">1.</span> <span class="nav-text">在webview中 native 与JS交互</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Android原生调用js方法"><span class="nav-number">1.1.</span> <span class="nav-text">1 Android原生调用js方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#在webview中-native-与JS交互"><span class="nav-number">1.</span> <span class="nav-text">在webview中 native 与JS交互</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Android原生调用js方法"><span class="nav-number">1.1.</span> <span class="nav-text">1 Android原生调用js方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-JS调用Android原生代码"><span class="nav-number">1.2.</span> <span class="nav-text">2 JS调用Android原生代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webview的使用问题以及优化措施"><span class="nav-number">2.</span> <span class="nav-text">webview的使用问题以及优化措施</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在使用webview加载h5时，打开经常十分缓慢"><span class="nav-number">2.1.</span> <span class="nav-text">在使用webview加载h5时，打开经常十分缓慢</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用全局webview对象"><span class="nav-number">2.2.</span> <span class="nav-text">使用全局webview对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#非静态H5页面，由native侧进行数据获取，通过native调用js方法，对H5页面数据进行刷新"><span class="nav-number">2.3.</span> <span class="nav-text">非静态H5页面，由native侧进行数据获取，通过native调用js方法，对H5页面数据进行刷新</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebView初始化"><span class="nav-number"></span> <span class="nav-text">WebView初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number"></span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这意味着什么呢？"><span class="nav-number"></span> <span class="nav-text">这意味着什么呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么优化"><span class="nav-number"></span> <span class="nav-text">怎么优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#全局WebView"><span class="nav-number">1.</span> <span class="nav-text">全局WebView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端代理数据请求"><span class="nav-number">2.</span> <span class="nav-text">客户端代理数据请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立连接-服务器处理"><span class="nav-number"></span> <span class="nav-text">建立连接/服务器处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析-1"><span class="nav-number"></span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化"><span class="nav-number"></span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS采用和客户端API相同的域名"><span class="nav-number">1.</span> <span class="nav-text">DNS采用和客户端API相同的域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同步渲染采用chunk编码"><span class="nav-number">2.</span> <span class="nav-text">同步渲染采用chunk编码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#页面框架渲染"><span class="nav-number"></span> <span class="nav-text">页面框架渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析-2"><span class="nav-number"></span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这意味着什么呢？-1"><span class="nav-number"></span> <span class="nav-text">这意味着什么呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对于表1"><span class="nav-number">1.</span> <span class="nav-text">对于表1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对于表2，我们可以发现一个问题"><span class="nav-number">2.</span> <span class="nav-text">对于表2，我们可以发现一个问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化-1"><span class="nav-number"></span> <span class="nav-text">优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS加载"><span class="nav-number"></span> <span class="nav-text">JS加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS解析、编译、执行"><span class="nav-number"></span> <span class="nav-text">JS解析、编译、执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析-3"><span class="nav-number"></span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这意味着什么"><span class="nav-number"></span> <span class="nav-text">这意味着什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化-2"><span class="nav-number"></span> <span class="nav-text">优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebView性能优化总结"><span class="nav-number"></span> <span class="nav-text">WebView性能优化总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView内存消耗"><span class="nav-number"></span> <span class="nav-text">WebView内存消耗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析-4"><span class="nav-number"></span> <span class="nav-text">分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView体验"><span class="nav-number"></span> <span class="nav-text">WebView体验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#长按选择"><span class="nav-number"></span> <span class="nav-text">长按选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#点击延迟"><span class="nav-number"></span> <span class="nav-text">点击延迟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面滑动期间不渲染-执行"><span class="nav-number"></span> <span class="nav-text">页面滑动期间不渲染/执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#crash"><span class="nav-number"></span> <span class="nav-text">crash</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView安全"><span class="nav-number"></span> <span class="nav-text">WebView安全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WebView被运营商劫持、注入问题"><span class="nav-number"></span> <span class="nav-text">WebView被运营商劫持、注入问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用CSP（Content-Security-Policy）"><span class="nav-number">0.1.</span> <span class="nav-text">使用CSP（Content Security Policy）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS"><span class="nav-number">1.</span> <span class="nav-text">HTTPS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#App使用Socket代理请求"><span class="nav-number">2.</span> <span class="nav-text">App使用Socket代理请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端内打开第三方WebView"><span class="nav-number"></span> <span class="nav-text">客户端内打开第三方WebView</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发展"><span class="nav-number"></span> <span class="nav-text">发展</span></a></div>
             
 
           </div>
